@@ -539,22 +539,22 @@ def report_data(Filename,Sheetname,Datadict):
         df=pd.concat([df,pd.DataFrame({k:Datadict[k]})],axis=1)
     with pd.ExcelWriter(Filename,engine='openpyxl',mode='a') as write:
         df.to_excel(write,sheet_name=Sheetname,index=False)
+if __name__=='main':
+    #数据存储位置
+    Filename=r'C:\Users\Desktop\StressField.xlsx'
+    #读取数据  性能、划擦条件
+    material_property=read_condition(Filename,'property','GaAs')
+    scratch_condition=read_condition(Filename,'condition','set1')
+    #生产若干个Z=0，XY平面上的坐标点
+    position_point1=positionGenerator([-5,5,0.1],[-5,5,0.1],0,'XY')
+    #计算XY平面应力场结果
+    ResultsDict1=dataProcessing(material_property,scratch_condition,position_point1,0,Mode='XY')
+    #输出结果  文献[1]中 绘图选择  x_normalized(x/h)、y_normalized(y/h)、xigma_max_normalized(2*np.pi*h**2*xigma_max/P)
+    report_data(Filename,'Results_set1_GaAs_XY',ResultsDict1)
 
-#数据存储位置
-Filename=r'C:\Users\李\Desktop\StressField.xlsx'
-#读取数据  性能、划擦条件
-material_property=read_condition(Filename,'property','GaAs')
-scratch_condition=read_condition(Filename,'condition','set1')
-#生产若干个Z=0，XY平面上的坐标点
-position_point1=positionGenerator([-5,5,0.1],[-5,5,0.1],0,'XY')
-#计算XY平面应力场结果
-ResultsDict1=dataProcessing(material_property,scratch_condition,position_point1,0,Mode='XY')
-#输出结果  文献[1]中 绘图选择  x_normalized(x/h)、y_normalized(y/h)、xigma_max_normalized(2*np.pi*h**2*xigma_max/P)
-report_data(Filename,'Results_set1_GaAs_XY',ResultsDict1)
-
-#生产若干个Y=0，ZX平面上的坐标点
-position_point2=positionGenerator([-5,5,0.1],[-5,5,0.1],0,'ZX')
-#计算ZX应力场结果
-ResultsDict2=dataProcessingXigma(material_property,scratch_condition,position_point2)
-#输出结果  文献[1]中 绘图选择  x_normalized(x/h)、z_normalized(z/h)、xigma_y_normalized(2*np.pi*h**2*xigma_y/P)
-report_data(Filename,'Results_set1_GaAs_ZX',ResultsDict2)
+    #生产若干个Y=0，ZX平面上的坐标点
+    position_point2=positionGenerator([-5,5,0.1],[-5,5,0.1],0,'ZX')
+    #计算ZX应力场结果
+    ResultsDict2=dataProcessingXigma(material_property,scratch_condition,position_point2)
+    #输出结果  文献[1]中 绘图选择  x_normalized(x/h)、z_normalized(z/h)、xigma_y_normalized(2*np.pi*h**2*xigma_y/P)
+    report_data(Filename,'Results_set1_GaAs_ZX',ResultsDict2)
